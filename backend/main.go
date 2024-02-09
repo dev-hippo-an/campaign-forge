@@ -2,15 +2,18 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 )
 
 func main() {
+
 	router := gin.Default()
 
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	router.GET("/", IndexHanlder())
+	router.POST("/campaigns", CampaignListCreateHandler())
+	router.POST("/campaign", CampaignCreateHandler())
 
-	router.Run(":8080")
+	log.Fatal(router.Run(":8080"))
 }

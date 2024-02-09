@@ -1,18 +1,30 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"net/http"
 )
 
-func IndexHanlder() func(*gin.Context) {
-
+func CampaignListCreateHandler() func(*gin.Context) {
 	return func(ctx *gin.Context) {
-		response := GetMessageFromOpenAI()
-		ctx.JSON(http.StatusOK, map[string]interface{}{
-			"message": *response,
-		})
-	}
 
+		campaignCategory := CampaignCategory{}
+
+		if err := ctx.ShouldBindBodyWith(&campaignCategory, binding.JSON); err == nil {
+			campaigns := GetCampaignList(campaignCategory)
+			ctx.JSON(http.StatusOK, campaigns)
+		}
+	}
+}
+
+func CampaignCreateHandler() func(*gin.Context) {
+	return func(ctx *gin.Context) {
+		campaign := Campaign{}
+
+		if err := ctx.ShouldBindBodyWith(&campaign, binding.JSON); err == nil {
+			campaign := GetCampaign(campaign)
+			ctx.JSON(http.StatusOK, campaign)
+		}
+	}
 }
